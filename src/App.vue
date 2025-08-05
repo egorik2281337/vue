@@ -1,4 +1,11 @@
 <template>
+   <div class="image-box"> <!-- картинка -->
+    <img
+      src="https://homdgcat.wiki/homdgcat-res/Avatar/UI_AvatarIcon_Chasca.png"
+      alt="Пример изображения"
+      class="external-image"
+    />
+  </div>
   <div class="auth-wrapper">
     <div class="auth-container">
       <h2>Вход в систему</h2>
@@ -170,4 +177,12 @@ button:hover {
 .register-btn:hover {
   background-color: #f0fef9;
 }
+
+.external-image {
+  width: 300px;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto;
+}
+
 </style>
