@@ -1,32 +1,37 @@
 <template>
-  <div class="auth-container">
-    <h2>Вход в систему</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          v-model="email"
-          id="email"
-          :class="{ 'invalid': emailError }"
-        />
-        <p v-if="emailError" class="error">{{ emailError }}</p>
-      </div>
+  <div class="auth-wrapper">
+    <div class="auth-container">
+      <h2>Вход в систему</h2>
+      <form @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            v-model="email"
+            id="email"
+            :class="{ 'invalid': emailError }"
+          />
+          <p v-if="emailError" class="error">{{ emailError }}</p>
+        </div>
 
-      <div class="form-group">
-        <label for="password">Пароль</label>
-        <input
-          type="password"
-          v-model="password"
-          id="password"
-          :class="{ 'invalid': passwordError }"
-        />
-        <p v-if="passwordError" class="error">{{ passwordError }}</p>
-      </div>
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <input
+            type="password"
+            v-model="password"
+            id="password"
+            :class="{ 'invalid': passwordError }"
+          />
+          <p v-if="passwordError" class="error">{{ passwordError }}</p>
+        </div>
 
-      <button type="submit">Войти</button>
-      <p v-if="successMessage" class="success">{{ successMessage }}</p>
-    </form>
+        <button type="submit">Войти</button>
+        <p v-if="successMessage" class="success">{{ successMessage }}</p>
+      </form>
+
+      <!-- Новая кнопка регистрации -->
+      <button class="register-btn" @click="goToRegister">Регистрация</button>
+    </div>
   </div>
 </template>
 
@@ -62,53 +67,58 @@ function handleLogin() {
   }
 
   if (valid) {
-    // Имитация успешного входа
     successMessage.value = 'Успешный вход!'
     console.log('Отправка данных:', {
       email: email.value,
       password: password.value
     })
 
-    // Очистка
     email.value = ''
     password.value = ''
   }
 }
+
+// Пока просто вывод в консоль
+function goToRegister() {
+  console.log('Переход на страницу регистрации (пока не реализовано)')
+}
 </script>
 
 <style scoped>
-.auth-container {
+.auth-container { /* основной бокс */
+  width: 100%;
   max-width: 400px;
-  margin: 100px auto;
   padding: 2rem;
-  border: 1px solid #ccc;
+  border: 1px solid #c7b1b1;
   border-radius: 16px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 16px rgba(182, 180, 180, 0.1);
   font-family: sans-serif;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
-h2 {
+h2 { /* Заголовок (Вход в систему) */
   text-align: center;
   margin-bottom: 1.5rem;
+  color: #42b983;
 }
 
-.form-group {
+.form-group { /* Подпись Email и пароль */
   margin-bottom: 1.2rem;
+  color: #42b983;
 }
 
 label {
   display: block;
   margin-bottom: 0.4rem;
-  font-weight: 500;
+  font-weight: 550;
 }
 
 input {
   width: 100%;
   padding: 0.6rem;
   font-size: 1rem;
-  border: 1px solid #aaa;
-  border-radius: 8px;
+  border: 1px solid #000000;
+  border-radius: 10px;
   transition: border 0.3s;
 }
 
@@ -143,9 +153,21 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s;
+  margin-top: 0.8rem;
 }
 
 button:hover {
   background-color: #369e6f;
+}
+
+.register-btn { /* Кнопка регистрации */
+  background-color: #ffffff;
+  color: #42b983;
+  border: 1px solid #42b983;
+  margin-top: 1rem;
+}
+
+.register-btn:hover {
+  background-color: #f0fef9;
 }
 </style>
