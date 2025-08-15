@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Верхняя панель -->
     <header class="top-bar">
   <div class="left-side">
     <img src="https://kupikod.com/favicon.ico" alt="KupiKod" class="site-logo" />
@@ -19,7 +18,6 @@
 </header>
 
 
-    <!-- Основной фон и форма -->
     <div class="auth-wrapper">
       <div class="auth-container">
         <h2>Вход в систему</h2>
@@ -177,7 +175,7 @@ body {
 .features {
   display: flex;
   justify-content: center;
-  flex: 1; /* чтобы центрировать блок */
+  flex: 1;
   gap: 0.5rem;
 }
 
