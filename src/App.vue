@@ -325,7 +325,6 @@ button:hover {
   right: 20px;    /* справа */
   background-color: #ffd700;
   color: #000;
-  padding: 0.4rem 0.8rem; /* компактнее */
   font-size: 0.85rem;     /* уменьшаем текст */
   border: none;
   border-radius: 6px;
