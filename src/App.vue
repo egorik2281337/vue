@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- 🔹 Навбар -->
     <header class="navbar">
       <img class="logo" src="https://kupikod.com/favicon.ico" alt="Logo" />
       <nav class="menu">
@@ -23,7 +22,6 @@
       <button class="login-btn">Вход</button>
     </header>
 
-    <!-- 🔹 Форма авторизации -->
     <div class="auth-wrapper">
       <div class="auth-container">
         <h2>Вход в систему</h2>
@@ -66,7 +64,6 @@
       </div>
     </div>
 
-    <!-- 🔹 Кнопка озвучки -->
     <button class="a11y-toggle" @click="toggleA11y">
       {{ a11yMode ? 'Озвучка вкл.' : 'Озвучка выкл.' }}
     </button>
@@ -83,7 +80,6 @@ const passwordError = ref<string>("")
 const successMessage = ref<string>("")
 const a11yMode = ref<boolean>(false)
 
-// иконка в base64
 const icon =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOS4yNyAxLjUxYy40Mi40Mi40MiAxLjEgMCAxLjUxbC0xLjAyIDEuMDMgMi40NCAyLjQ0QTEuMDcgMS4wNyAwIDAgMSAxOS4yIDhsLTIuNDUtMi40NUwxNS40IDYuOWwyLjQ1IDIuNDVhMS4wNyAxLjA3IDAgMSAxLTEuNTEgMS41TDEzLjg5IDguNGwtMS43MiAxLjczYTYuMDQgNi4wNCAwIDEgMS0xLjc3LTEuMjVsMi43NC0yLjc0IDQuNjItNC42M2MuNDItLjQxIDEuMS0uNDEgMS41MSAwWk03Ljg1IDEwLjQ1YTMuOTEgMy45MSAwIDEgMCAwIDcuODIgMy45MSAzLjkxIDAgMCAwIDAtNy44MloiIGZpbGw9IiNmZmYiLz48L3N2Zz4K"
 
@@ -145,14 +141,13 @@ function announce(text: string) {
 </script>
 
 <style scoped>
-/* 🔹 Навбар */
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.6rem 1.5rem;
-  background: #ffffffcc;
-  border-bottom: 1px solid #ddd;
+  background: #252525;
+  border-bottom: 1px solid #252525;
 }
 
 .logo {
@@ -174,7 +169,7 @@ function announce(text: string) {
   padding: 0.5rem 1rem;
   border-radius: 10px;
   background: #42b983;
-  color: white;
+  color: #252525;
   cursor: pointer;
   text-decoration: none;
 }
@@ -185,7 +180,7 @@ function announce(text: string) {
 
 .login-btn {
   background: #42b983;
-  color: #fff;
+  color: #252525;
   border: none;
   border-radius: 8px;
   padding: 0.6rem 1rem;
@@ -197,7 +192,6 @@ function announce(text: string) {
   background: #369e6f;
 }
 
-/* 🔹 Авторизация */
 .auth-wrapper {
   display: flex;
   justify-content: center;
@@ -270,7 +264,7 @@ button {
   padding: 0.8rem;
   font-size: 1rem;
   background-color: #42b983;
-  color: white;
+  color: #252525;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -283,16 +277,15 @@ button:hover {
 }
 
 .register-btn {
-  background-color: #ffffff;
+  background-color: #252525;
   color: #42b983;
   border: 1px solid #42b983;
 }
 
 .register-btn:hover {
-  background-color: #f0fef9;
+  background-color: #252525;
 }
 
-/* 🔹 Кнопка озвучки */
 .a11y-toggle {
   position: fixed;
   bottom: 20px;
