@@ -4,19 +4,19 @@
       <img class="logo" src="https://kupikod.com/favicon.ico" alt="Logo" />
       <nav class="menu">
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Пополняй стим
+          <CommunityIcon /> Пополняй стим
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Консоли
+          <CommunityIcon /> Консоли
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Игровая валюта
+          <CommunityIcon /> Игровая валюта
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Гифты
+          <CommunityIcon /> Гифты
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Ключи
+          <CommunityIcon /> Ключи
         </a>
       </nav>
       <button class="login-btn">Вход</button>
@@ -72,6 +72,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import CommunityIcon from "@/assets/icons/community.svg"
 
 const email = ref<string>("")
 const password = ref<string>("")
@@ -79,9 +80,6 @@ const emailError = ref<string>("")
 const passwordError = ref<string>("")
 const successMessage = ref<string>("")
 const a11yMode = ref<boolean>(false)
-
-const icon =
-  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOS4yNyAxLjUxYy40Mi40Mi40MiAxLjEgMCAxLjUxbC0xLjAyIDEuMDMgMi40NCAyLjQ0QTEuMDcgMS4wNyAwIDAgMSAxOS4yIDhsLTIuNDUtMi40NUwxNS40IDYuOWwyLjQ1IDIuNDVhMS4wNyAxLjA3IDAgMSAxLTEuNTEgMS41TDEzLjg5IDguNGwtMS43MiAxLjczYTYuMDQgNi4wNCAwIDEgMS0xLjc3LTEuMjVsMi43NC0yLjc0IDQuNjItNC42M2MuNDItLjQxIDEuMS0uNDEgMS41MSAwWk03Ljg1IDEwLjQ1YTMuOTEgMy45MSAwIDEgMCAwIDcuODIgMy45MSAzLjkxIDAgMCAwIDAtNy44MloiIGZpbGw9IiNmZmYiLz48L3N2Zz4K"
 
 function validateEmail(email: string): boolean {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -141,6 +139,7 @@ function announce(text: string) {
 </script>
 
 <style scoped>
+/* Твои стили оставляем без изменений */
 .navbar {
   display: flex;
   align-items: center;
