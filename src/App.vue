@@ -4,22 +4,22 @@
       <img class="logo" src="https://kupikod.com/favicon.ico" alt="Logo" />
       <nav class="menu">
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Пополняй стим
+          <CommunityIcon /> Пополняй стим
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Консоли
+          <CommunityIcon /> Консоли
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Игровая валюта
+          <CommunityIcon /> Игровая валюта
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Гифты
+          <CommunityIcon /> Гифты
         </a>
         <a class="menu-item">
-          <img :src="icon" alt="icon" /> Ключи
+          <CommunityIcon /> Ключи
         </a>
       </nav>
-      <button class="login-btn">Вход</button>
+      <button class="login-btn" type="button">Вход</button>
     </header>
 
     <div class="auth-wrapper">
@@ -30,8 +30,8 @@
             <label for="email">Email</label>
             <input
               type="email"
-              v-model="email"
               id="email"
+              v-model="email"
               :class="{ invalid: emailError }"
               @focus="announce('Поле ввода Email')"
             />
@@ -42,8 +42,8 @@
             <label for="password">Пароль</label>
             <input
               type="password"
-              v-model="password"
               id="password"
+              v-model="password"
               :class="{ invalid: passwordError }"
               @focus="announce('Поле ввода Пароль')"
             />
@@ -55,6 +55,7 @@
         </form>
 
         <button
+          type="button"
           class="register-btn"
           @click="goToRegister"
           @focus="announce('Кнопка Регистрация')"
@@ -64,76 +65,76 @@
       </div>
     </div>
 
-    <button class="a11y-toggle" @click="toggleA11y">
+    <button
+      type="button"
+      class="a11y-toggle"
+      @click="toggleA11y"
+      :aria-pressed="a11yMode"
+    >
       {{ a11yMode ? 'Озвучка вкл.' : 'Озвучка выкл.' }}
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref } from 'vue'
+import CommunityIcon from '@/assets/icons/community.svg'
 
-const email = ref<string>("")
-const password = ref<string>("")
-const emailError = ref<string>("")
-const passwordError = ref<string>("")
-const successMessage = ref<string>("")
-const a11yMode = ref<boolean>(false)
+const email = ref('')
+const password = ref('')
+const emailError = ref('')
+const passwordError = ref('')
+const successMessage = ref('')
+const a11yMode = ref(false)
 
-const icon =
-  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOS4yNyAxLjUxYy40Mi40Mi40MiAxLjEgMCAxLjUxbC0xLjAyIDEuMDMgMi40NCAyLjQ0QTEuMDcgMS4wNyAwIDAgMSAxOS4yIDhsLTIuNDUtMi40NUwxNS40IDYuOWwyLjQ1IDIuNDVhMS4wNyAxLjA3IDAgMSAxLTEuNTEgMS41TDEzLjg5IDguNGwtMS43MiAxLjczYTYuMDQgNi4wNCAwIDEgMS0xLjc3LTEuMjVsMi43NC0yLjc0IDQuNjItNC42M2MuNDItLjQxIDEuMS0uNDEgMS41MSAwWk03Ljg1IDEwLjQ1YTMuOTEgMy45MSAwIDEgMCAwIDcuODIgMy45MSAzLjkxIDAgMCAwIDAtNy44MloiIGZpbGw9IiNmZmYiLz48L3N2Zz4K"
+const validateEmail = (email: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
-function validateEmail(email: string): boolean {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return regex.test(email)
-}
-
-function handleLogin() {
-  emailError.value = ""
-  passwordError.value = ""
-  successMessage.value = ""
+const handleLogin = () => {
+  emailError.value = ''
+  passwordError.value = ''
+  successMessage.value = ''
 
   let valid = true
 
   if (!validateEmail(email.value)) {
-    emailError.value = "Введите корректный email"
-    announce("Ошибка: Введите корректный email")
+    emailError.value = 'Введите корректный email'
+    announce('Ошибка: Введите корректный email')
     valid = false
   }
 
   if (password.value.length < 6) {
-    passwordError.value = "Пароль должен быть не менее 6 символов"
-    announce("Ошибка: Пароль должен быть не менее 6 символов")
+    passwordError.value = 'Пароль должен быть не менее 6 символов'
+    announce('Ошибка: Пароль должен быть не менее 6 символов')
     valid = false
   }
 
   if (valid) {
-    successMessage.value = "Успешный вход!"
-    announce("Успешный вход")
-    console.log("Отправка данных:", {
+    successMessage.value = 'Успешный вход!'
+    announce('Успешный вход')
+    console.log('Отправка данных:', {
       email: email.value,
       password: password.value,
     })
-
-    email.value = ""
-    password.value = ""
+    email.value = ''
+    password.value = ''
   }
 }
 
-function goToRegister() {
-  announce("Переход на страницу регистрации")
-  console.log("Переход на страницу регистрации (пока не реализовано)")
+const goToRegister = () => {
+  announce('Переход на страницу регистрации')
+  console.log('Переход на страницу регистрации (пока не реализовано)')
 }
 
-function toggleA11y() {
+const toggleA11y = () => {
   a11yMode.value = !a11yMode.value
-  announce(a11yMode.value ? "Режим озвучки включен" : "Режим озвучки выключен")
+  announce(a11yMode.value ? 'Режим озвучки включен' : 'Режим озвучки выключен')
 }
 
-function announce(text: string) {
-  if (!a11yMode.value) return
+const announce = (text: string) => {
+  if (!a11yMode.value || text.trim() === '') return
   const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = "ru-RU"
+  utterance.lang = 'ru-RU'
   utterance.rate = 1
   speechSynthesis.cancel()
   speechSynthesis.speak(utterance)
@@ -158,8 +159,8 @@ function announce(text: string) {
 .menu {
   display: flex;
   gap: 1rem;
-  justify-content: center;
   flex-grow: 1;
+  justify-content: center;
 }
 
 .menu-item {
@@ -197,7 +198,7 @@ function announce(text: string) {
   justify-content: center;
   align-items: center;
   height: calc(100vh - 70px);
-  background-image: url("https://id.kupikod.com/_nuxt/bg.DcNXRhN0.webp");
+  background-image: url('https://id.kupikod.com/_nuxt/bg.DcNXRhN0.webp');
   background-size: cover;
   background-position: center;
 }
@@ -235,7 +236,7 @@ input {
   font-size: 1rem;
   border: 1px solid #000000;
   border-radius: 10px;
-  transition: border 0.3s;
+  transition: border 0.3s, box-shadow 0.3s;
 }
 
 input:focus {
@@ -268,12 +269,13 @@ button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
   margin-top: 0.8rem;
 }
 
 button:hover {
   background-color: #369e6f;
+  transform: scale(1.02);
 }
 
 .register-btn {
