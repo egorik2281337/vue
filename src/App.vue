@@ -1,94 +1,26 @@
-<template>
-  <div id="app">
-    <header class="navbar">
-      <img class="logo" src="https://kupikod.com/favicon.ico" alt="Logo" />
-      <nav class="menu">
-        <a class="menu-item">
-          <CommunityIcon /> Пополняй стим
-        </a>
-        <a class="menu-item">
-          <CommunityIcon /> Консоли
-        </a>
-        <a class="menu-item">
-          <CommunityIcon /> Игровая валюта
-        </a>
-        <a class="menu-item">
-          <CommunityIcon /> Гифты
-        </a>
-        <a class="menu-item">
-          <CommunityIcon /> Ключи
-        </a>
-      </nav>
-      <button class="login-btn" type="button">Вход</button>
-    </header>
-
-    <div class="auth-wrapper">
-      <div class="auth-container">
-        <h2>Вход в систему</h2>
-        <form @submit.prevent="handleLogin">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              v-model="email"
-              :class="{ invalid: emailError }"
-              @focus="announce('Поле ввода Email')"
-            />
-            <p v-if="emailError" class="error">{{ emailError }}</p>
-          </div>
-
-          <div class="form-group">
-            <label for="password">Пароль</label>
-            <input
-              type="password"
-              id="password"
-              v-model="password"
-              :class="{ invalid: passwordError }"
-              @focus="announce('Поле ввода Пароль')"
-            />
-            <p v-if="passwordError" class="error">{{ passwordError }}</p>
-          </div>
-
-          <button type="submit" @focus="announce('Кнопка Войти')">Войти</button>
-          <p v-if="successMessage" class="success">{{ successMessage }}</p>
-        </form>
-
-        <button
-          type="button"
-          class="register-btn"
-          @click="goToRegister"
-          @focus="announce('Кнопка Регистрация')"
-        >
-          Регистрация
-        </button>
-      </div>
-    </div>
-
-    <button
-      type="button"
-      class="a11y-toggle"
-      @click="toggleA11y"
-      :aria-pressed="a11yMode"
-    >
-      {{ a11yMode ? 'Озвучка вкл.' : 'Озвучка выкл.' }}
-    </button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import CommunityIcon from '@/assets/icons/community.svg'
+import LogotipIcon from '@/assets/icons/logotip.svg'
+
+const menuItems = [
+  { text: 'Пополняй стим', icon: CommunityIcon },
+  { text: 'Консоли', icon: CommunityIcon },
+  { text: 'Игровая валюта', icon: CommunityIcon },
+  { text: 'Гифты', icon: CommunityIcon },
+  { text: 'Ключи', icon: CommunityIcon },
+]
 
 const email = ref('')
 const password = ref('')
 const emailError = ref('')
 const passwordError = ref('')
 const successMessage = ref('')
+
 const a11yMode = ref(false)
 
-const validateEmail = (email: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+const validateEmail = (value: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 
 const handleLogin = () => {
   emailError.value = ''
@@ -112,7 +44,7 @@ const handleLogin = () => {
   if (valid) {
     successMessage.value = 'Успешный вход!'
     announce('Успешный вход')
-    console.log('Отправка данных:', {
+    console.warn('Отправка данных:', {
       email: email.value,
       password: password.value,
     })
@@ -123,16 +55,21 @@ const handleLogin = () => {
 
 const goToRegister = () => {
   announce('Переход на страницу регистрации')
-  console.log('Переход на страницу регистрации (пока не реализовано)')
+  console.warn('Переход на страницу регистрации (пока не реализовано)')
 }
 
 const toggleA11y = () => {
   a11yMode.value = !a11yMode.value
-  announce(a11yMode.value ? 'Режим озвучки включен' : 'Режим озвучки выключен')
+  const message = a11yMode.value
+    ? 'Режим озвучки включен'
+    : 'Режим озвучки выключен'
+  announce(message)
 }
 
 const announce = (text: string) => {
-  if (!a11yMode.value || text.trim() === '') return
+  if (!a11yMode.value || text.trim() === '') {
+    return
+  }
   const utterance = new SpeechSynthesisUtterance(text)
   utterance.lang = 'ru-RU'
   utterance.rate = 1
@@ -140,6 +77,82 @@ const announce = (text: string) => {
   speechSynthesis.speak(utterance)
 }
 </script>
+
+<template>
+  <div id="app">
+    <header class="navbar">
+      <LogotipIcon class="logo" />
+
+      <nav class="menu" aria-label="Главное меню">
+        <button
+          v-for="(item, index) in menuItems"
+          :key="index"
+          class="menu-item"
+        >
+          <component :is="item.icon" /> {{ item.text }}
+        </button>
+      </nav>
+
+      <button class="login-btn" type="button">Вход</button>
+    </header>
+
+    <div class="auth-wrapper" :style="{ backgroundImage: 'url(/back.svg)' }">
+      <div class="auth-container">
+        <h2>Вход в систему</h2>
+        <form @submit.prevent="handleLogin">
+          <div class="form-group">
+            <label for="email">
+              <input id="email" type="text">
+              id="email"
+              v-model="email"
+              name="email"
+              type="email"
+              :class="{ invalid: emailError }"
+              @focus="announce('Поле ввода Email')"
+              >
+              <p v-if="emailError" class="error">{{ emailError }}</p>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              <input id="password" type="text">
+              id="password"
+              v-model="password"
+              name="password"
+              type="password"
+              :class="{ invalid: passwordError }"
+              @focus="announce('Поле ввода Пароль')"
+              >
+              <p v-if="passwordError" class="error">{{ passwordError }}</p>
+            </label>
+          </div>
+
+          <button type="submit" @focus="announce('Кнопка Войти')">Войти</button>
+          <p v-if="successMessage" class="success">{{ successMessage }}</p>
+        </form>
+
+        <button
+          type="button"
+          class="register-btn"
+          @click="goToRegister"
+          @focus="announce('Кнопка Регистрация')"
+        >
+          Регистрация
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="a11y-toggle"
+      :aria-pressed="a11yMode"
+      @click="toggleA11y"
+    >
+      {{ a11yMode ? 'Озвучка вкл.' : 'Озвучка выкл.' }}
+    </button>
+  </div>
+</template>
 
 <style scoped>
 .navbar {
@@ -152,7 +165,7 @@ const announce = (text: string) => {
 }
 
 .logo {
-  height: 40px;
+  height: 30px;
   margin-right: 1rem;
 }
 
@@ -173,10 +186,12 @@ const announce = (text: string) => {
   color: #252525;
   cursor: pointer;
   text-decoration: none;
+  transition: background 0.3s;
 }
 
 .menu-item:hover {
   background: #369e6f;
+  color: #fff;
 }
 
 .login-btn {
@@ -186,7 +201,6 @@ const announce = (text: string) => {
   border-radius: 8px;
   padding: 0.6rem 1rem;
   cursor: pointer;
-  margin-left: 1rem;
 }
 
 .login-btn:hover {
@@ -198,7 +212,6 @@ const announce = (text: string) => {
   justify-content: center;
   align-items: center;
   height: calc(100vh - 70px);
-  background-image: url('https://id.kupikod.com/_nuxt/bg.DcNXRhN0.webp');
   background-size: cover;
   background-position: center;
 }
