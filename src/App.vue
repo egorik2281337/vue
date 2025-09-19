@@ -1,53 +1,144 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { Component } from 'vue'
+
+import CommunityIcon from '@/assets/icons/community.svg'
+import LogoIcon from '@/assets/icons/logo-04.svg'
+import GiftIcon from '@/assets/icons/gift.svg'
+import PhoneIcon from '@/assets/icons/phone.svg'
+import SteamIcon from '@/assets/icons/steam-01.svg'
+import BgImage from '@/assets/icons/back.png'
+
+interface MenuItem {
+  text: string
+  icon: Component
+}
+
+const menuItems: MenuItem[] = [
+  { text: 'Пополняй стим', icon: SteamIcon },
+  { text: 'Игровая валюта', icon: PhoneIcon },
+  { text: 'Гифты', icon: GiftIcon },
+  { text: 'Ключи', icon: CommunityIcon },
+]
+
+const email = ref('')
+const password = ref('')
+const emailError = ref('')
+const passwordError = ref('')
+const successMessage = ref('')
+
+const a11yMode = ref(false)
+
+const validateEmail = (value: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+
+const handleLogin = () => {
+  emailError.value = ''
+  passwordError.value = ''
+  successMessage.value = ''
+
+  let valid = true
+
+  if (!validateEmail(email.value)) {
+    emailError.value = 'Введите корректный email'
+    announce('Ошибка: Введите корректный email')
+    valid = false
+  }
+
+  if (password.value.length < 6) {
+    passwordError.value = 'Пароль должен быть не менее 6 символов'
+    announce('Ошибка: Пароль должен быть не менее 6 символов')
+    valid = false
+  }
+
+  if (valid) {
+    successMessage.value = 'Успешный вход!'
+    announce('Успешный вход')
+    console.warn('Отправка данных:', {
+      email: email.value,
+      password: password.value,
+    })
+    email.value = ''
+    password.value = ''
+  }
+}
+
+const goToRegister = () => {
+  announce('Переход на страницу регистрации')
+  console.warn('Переход на страницу регистрации (пока не реализовано)')
+}
+
+const toggleA11y = () => {
+  a11yMode.value = !a11yMode.value
+  const message = a11yMode.value
+    ? 'Режим озвучки включен'
+    : 'Режим озвучки выключен'
+  announce(message)
+}
+
+const announce = (text: string) => {
+  if (!a11yMode.value || text.trim() === '') {
+    return
+  }
+  const utterance = new SpeechSynthesisUtterance(text)
+  utterance.lang = 'ru-RU'
+  utterance.rate = 1
+  speechSynthesis.cancel()
+  speechSynthesis.speak(utterance)
+}
+</script>
+
 <template>
   <div id="app">
     <header class="navbar">
-      <img class="logo" src="https://kupikod.com/favicon.ico" alt="Logo" />
-      <nav class="menu">
-        <a class="menu-item">
-          <img :src="icon" alt="icon" /> Пополняй стим
-        </a>
-        <a class="menu-item">
-          <img :src="icon" alt="icon" /> Консоли
-        </a>
-        <a class="menu-item">
-          <img :src="icon" alt="icon" /> Игровая валюта
-        </a>
-        <a class="menu-item">
-          <img :src="icon" alt="icon" /> Гифты
-        </a>
-        <a class="menu-item">
-          <img :src="icon" alt="icon" /> Ключи
-        </a>
+      <LogoIcon class="logo" />
+
+      <nav class="menu" aria-label="Главное меню">
+        <button
+          v-for="(item, index) in menuItems"
+          :key="index"
+          class="menu-item"
+        >
+          <component :is="item.icon" class="icon" />
+          <span class="menu-text">{{ item.text }}</span>
+        </button>
       </nav>
-      <button class="login-btn">Вход</button>
+
+      <button class="login-btn" type="button">Вход</button>
     </header>
 
-    <div class="auth-wrapper">
+    <div class="auth-wrapper" :style="{ backgroundImage: `url(${BgImage})` }">
       <div class="auth-container">
         <h2>Вход в систему</h2>
         <form @submit.prevent="handleLogin">
           <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              v-model="email"
-              id="email"
-              :class="{ invalid: emailError }"
-              @focus="announce('Поле ввода Email')"
-            />
-            <p v-if="emailError" class="error">{{ emailError }}</p>
+            <label for="email">
+              <input
+                id="email"
+                v-model="email"
+                name="email"
+                type="email"
+                placeholder="Поле ввода Email"
+                :class="{ invalid: emailError }"
+                @focus="announce('Поле ввода Email')"
+              >
+              <p v-if="emailError" class="error">{{ emailError }}</p>
+            </label>
           </div>
 
           <div class="form-group">
-            <label for="password">Пароль</label>
-            <input
-              type="password"
-              v-model="password"
-              id="password"
-              :class="{ invalid: passwordError }"
-              @focus="announce('Поле ввода Пароль')"
-            />
-            <p v-if="passwordError" class="error">{{ passwordError }}</p>
+            <label for="password">
+              <input
+                id="password"
+                v-model="password"
+                name="password"
+                type="password"
+                placeholder="Поле ввода Пароль"
+                :class="{ invalid: passwordError }"
+                @focus="announce('Поле ввода Пароль')"
+              >
+              <p v-if="passwordError" class="error">{{ passwordError }}</p>
+            </label>
           </div>
 
           <button type="submit" @focus="announce('Кнопка Войти')">Войти</button>
@@ -55,6 +146,7 @@
         </form>
 
         <button
+          type="button"
           class="register-btn"
           @click="goToRegister"
           @focus="announce('Кнопка Регистрация')"
@@ -64,128 +156,110 @@
       </div>
     </div>
 
-    <button class="a11y-toggle" @click="toggleA11y">
+    <button
+      type="button"
+      class="a11y-toggle"
+      :aria-pressed="a11yMode"
+      @click="toggleA11y"
+    >
       {{ a11yMode ? 'Озвучка вкл.' : 'Озвучка выкл.' }}
     </button>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue"
-
-const email = ref<string>("")
-const password = ref<string>("")
-const emailError = ref<string>("")
-const passwordError = ref<string>("")
-const successMessage = ref<string>("")
-const a11yMode = ref<boolean>(false)
-
-const icon =
-  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOS4yNyAxLjUxYy40Mi40Mi40MiAxLjEgMCAxLjUxbC0xLjAyIDEuMDMgMi40NCAyLjQ0QTEuMDcgMS4wNyAwIDAgMSAxOS4yIDhsLTIuNDUtMi40NUwxNS40IDYuOWwyLjQ1IDIuNDVhMS4wNyAxLjA3IDAgMSAxLTEuNTEgMS41TDEzLjg5IDguNGwtMS43MiAxLjczYTYuMDQgNi4wNCAwIDEgMS0xLjc3LTEuMjVsMi43NC0yLjc0IDQuNjItNC42M2MuNDItLjQxIDEuMS0uNDEgMS41MSAwWk03Ljg1IDEwLjQ1YTMuOTEgMy45MSAwIDEgMCAwIDcuODIgMy45MSAzLjkxIDAgMCAwIDAtNy44MloiIGZpbGw9IiNmZmYiLz48L3N2Zz4K"
-
-function validateEmail(email: string): boolean {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return regex.test(email)
+<style>
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-function handleLogin() {
-  emailError.value = ""
-  passwordError.value = ""
-  successMessage.value = ""
-
-  let valid = true
-
-  if (!validateEmail(email.value)) {
-    emailError.value = "Введите корректный email"
-    announce("Ошибка: Введите корректный email")
-    valid = false
-  }
-
-  if (password.value.length < 6) {
-    passwordError.value = "Пароль должен быть не менее 6 символов"
-    announce("Ошибка: Пароль должен быть не менее 6 символов")
-    valid = false
-  }
-
-  if (valid) {
-    successMessage.value = "Успешный вход!"
-    announce("Успешный вход")
-    console.log("Отправка данных:", {
-      email: email.value,
-      password: password.value,
-    })
-
-    email.value = ""
-    password.value = ""
-  }
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
-function goToRegister() {
-  announce("Переход на страницу регистрации")
-  console.log("Переход на страницу регистрации (пока не реализовано)")
-}
-
-function toggleA11y() {
-  a11yMode.value = !a11yMode.value
-  announce(a11yMode.value ? "Режим озвучки включен" : "Режим озвучки выключен")
-}
-
-function announce(text: string) {
-  if (!a11yMode.value) return
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = "ru-RU"
-  utterance.rate = 1
-  speechSynthesis.cancel()
-  speechSynthesis.speak(utterance)
-}
-</script>
-
-<style scoped>
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0.6rem 1.5rem;
   background: #252525;
   border-bottom: 1px solid #252525;
+  height: 50px;
+  position: relative;
 }
 
 .logo {
-  height: 40px;
+  position: absolute;
+  left: 1.5rem;
+  height: 50px;
   margin-right: 1rem;
+  color: #42b983;
 }
 
 .menu {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-grow: 1;
+  gap: 2rem;
+  position: absolute;
+  height: 72px;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.5rem 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 10px;
   background: #42b983;
   color: #252525;
   cursor: pointer;
-  text-decoration: none;
+  width: 150px;
+  height: 50px;
+  justify-content: flex-start;
+  transition: background 0.3s, color 0.3s;
 }
 
 .menu-item:hover {
   background: #369e6f;
+  color: #fff;
+}
+
+.menu-item:hover .icon {
+  transition: filter 0.3s;
+  filter: brightness(0) invert(1);
+}
+
+.menu-text {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: block;
 }
 
 .login-btn {
+  position: absolute;
+  right: 1.5rem;
   background: #42b983;
   color: #252525;
   border: none;
   border-radius: 8px;
   padding: 0.6rem 1rem;
   cursor: pointer;
-  margin-left: 1rem;
+  width: 150px;
+  height: 50px;
+  top: -2px;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .login-btn:hover {
@@ -196,8 +270,8 @@ function announce(text: string) {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 70px);
-  background-image: url("https://id.kupikod.com/_nuxt/bg.DcNXRhN0.webp");
+  min-height: 100vh;
+  width: 100%;
   background-size: cover;
   background-position: center;
 }
@@ -214,13 +288,24 @@ function announce(text: string) {
 
 h2 {
   text-align: center;
+  height: 50px;
   margin-bottom: 1.5rem;
   color: #42b983;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .form-group {
-  margin-bottom: 1.2rem;
-  color: #42b983;
+  width: 100%;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #000;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 label {
@@ -232,10 +317,20 @@ label {
 input {
   width: 100%;
   padding: 0.6rem;
-  font-size: 1rem;
+  font-size: 18px;
+  font-weight: 550;
+  letter-spacing: 1.6px;
+  color: #252525;
   border: 1px solid #000000;
   border-radius: 10px;
-  transition: border 0.3s;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input::placeholder {
+  color: #888888;
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: 1px;
 }
 
 input:focus {
@@ -251,12 +346,16 @@ input.invalid {
   color: #e74c3c;
   font-size: 0.85rem;
   margin-top: 0.3rem;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .success {
   color: #2ecc71;
   text-align: center;
   margin-top: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 button {
@@ -268,18 +367,23 @@ button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.2s;
   margin-top: 0.8rem;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 button:hover {
   background-color: #369e6f;
+  transform: scale(1.02);
 }
 
 .register-btn {
   background-color: #252525;
   color: #42b983;
   border: 1px solid #42b983;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .register-btn:hover {
@@ -297,5 +401,8 @@ button:hover {
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
+  width: auto;
+  height: auto;
+  margin-top: 0;
 }
 </style>
