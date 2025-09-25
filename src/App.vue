@@ -2,11 +2,11 @@
 import { ref } from 'vue'
 import type { Component } from 'vue'
 
-import CommunityIcon from '@/assets/icons/community.svg'
-import LogoIcon from '@/assets/icons/logo-04.svg'
-import GiftIcon from '@/assets/icons/gift.svg'
-import PhoneIcon from '@/assets/icons/phone.svg'
-import SteamIcon from '@/assets/icons/steam-01.svg'
+import CommunityIcon from '@/assets/icons/community.svg?component'
+import LogoIcon from '@/assets/icons/logo-04.svg?component'
+import GiftIcon from '@/assets/icons/gift.svg?component'
+import PhoneIcon from '@/assets/icons/phone.svg?component'
+import SteamIcon from '@/assets/icons/steam-01.svg?component'
 import BgImage from '@/assets/icons/back.png'
 
 interface MenuItem {
