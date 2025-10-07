@@ -10,14 +10,6 @@ export default defineConfig({
     vueDevTools(),
     svgLoader({
       svgo: true,
-      svgoConfig: {
-        plugins: [
-          {
-            name: 'removeViewBox',
-            active: false,
-          },
-        ],
-      },
     }),
   ],
   resolve: {
