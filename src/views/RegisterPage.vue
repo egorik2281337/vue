@@ -25,42 +25,34 @@ const menuItems: MenuItem[] = [
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
-const emailError = ref('')
-const passwordError = ref('')
-const confirmPasswordError = ref('')
 const successMessage = ref('')
 
 const router = useRouter()
 
-const validateEmail = (value: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-
-const handleRegister = () => {
-  emailError.value = ''
-  passwordError.value = ''
-  confirmPasswordError.value = ''
+const handleRegister = (e: Event) => {
+  e.preventDefault()
   successMessage.value = ''
-  let valid = true
-
-  if (!validateEmail(email.value)) {
-    emailError.value = 'Введите корректный email'
-    valid = false
-  }
-  if (password.value.length < 6) {
-    passwordError.value = 'Пароль должен быть не менее 6 символов'
-    valid = false
-  }
+  const form = e.target as HTMLFormElement
+  const confirmEl = form.querySelector('#confirm-password')!
+  if (confirmEl) { confirmEl.setCustomValidity('') }
   if (password.value !== confirmPassword.value) {
-    confirmPasswordError.value = 'Пароли не совпадают'
-    valid = false
+    if (confirmEl) {
+      confirmEl.setCustomValidity('Пароли не совпадают')
+      confirmEl.reportValidity()
+    }
+    return
   }
-  if (valid) {
-    successMessage.value = 'Регистрация успешна!'
-    console.warn('Регистрация:', { email: email.value, password: password.value })
-    email.value = ''
-    password.value = ''
-    confirmPassword.value = ''
+
+  if (!form.checkValidity()) {
+    form.reportValidity()
+    return
   }
+
+  successMessage.value = 'Регистрация успешна!'
+  console.info('Регистрация:', { email: email.value, password: password.value })
+  email.value = ''
+  password.value = ''
+  confirmPassword.value = ''
 }
 
 const goToLogin = () => {
@@ -78,6 +70,7 @@ const goToLogin = () => {
             v-for="(item, index) in menuItems"
             :key="index"
             class="menu-item"
+            type="button"
           >
             <component :is="item.icon" class="icon" />
             <span class="menu-text">{{ item.text }}</span>
@@ -96,6 +89,7 @@ const goToLogin = () => {
           v-for="(item, index) in menuItems"
           :key="index"
           class="menu-item"
+          type="button"
         >
           <component :is="item.icon" class="icon" />
           <span class="menu-text">{{ item.text }}</span>
@@ -106,16 +100,15 @@ const goToLogin = () => {
     <div class="auth-wrapper" :style="{ backgroundImage: `url(${BgImage})` }">
       <div class="auth-container">
         <h2>Регистрация</h2>
-        <form @submit.prevent="handleRegister">
+        <form novalidate @submit.prevent="handleRegister">
           <div class="form-group">
             <input
               id="email"
               v-model="email"
               type="email"
               placeholder="Email"
-              :class="{ invalid: emailError }"
+              required
             >
-            <p v-if="emailError" class="error">{{ emailError }}</p>
           </div>
 
           <div class="form-group">
@@ -124,9 +117,9 @@ const goToLogin = () => {
               v-model="password"
               type="password"
               placeholder="Пароль"
-              :class="{ invalid: passwordError }"
+              minlength="6"
+              required
             >
-            <p v-if="passwordError" class="error">{{ passwordError }}</p>
           </div>
 
           <div class="form-group">
@@ -135,9 +128,9 @@ const goToLogin = () => {
               v-model="confirmPassword"
               type="password"
               placeholder="Подтвердите пароль"
-              :class="{ invalid: confirmPasswordError }"
+              minlength="6"
+              required
             >
-            <p v-if="confirmPasswordError" class="error">{{ confirmPasswordError }}</p>
           </div>
 
           <button type="submit">Зарегистрироваться</button>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import type { Component } from 'vue'
 
 import CommunityIcon from '@/assets/icons/community.svg?component'
@@ -14,8 +14,6 @@ interface MenuItem {
   text: string
   icon: Component
 }
-
-const router = useRouter()
 
 const menuItems: MenuItem[] = [
   { text: 'Пополняй стим', icon: SteamIcon },
@@ -53,10 +51,6 @@ const handleLogin = () => {
     email.value = ''
     password.value = ''
   }
-}
-
-const goToRegister = () => {
-  router.push('/register')
 }
 </script>
 
@@ -127,13 +121,12 @@ const goToRegister = () => {
           <p v-if="successMessage" class="success">{{ successMessage }}</p>
         </form>
 
-        <button
-          type="button"
+        <RouterLink
+          to="/register"
           class="register-btn"
-          @click="goToRegister"
         >
           Регистрация
-        </button>
+        </RouterLink>
       </div>
     </div>
   </div>
@@ -317,10 +310,24 @@ button:hover {
 }
 
 .register-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   background-color: #252525;
   color: #42b983;
   border: 1px solid #42b983;
   margin-top: 0.8rem;
+  border-radius: 8px;
+  width: 100%;
+  height: 45px;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.register-btn:hover {
+  background-color: #42b983;
+  color: #252525;
 }
 
 .error {
